@@ -1,4 +1,11 @@
+import Heading from "./components/Heading"
+
 export default function App()
 {
-  return <h1 className="font-mono">Hello</h1>
+  return(
+    <>
+      <Heading text="Habit Tracker"/>
+    </>
+  )
+  
 }
