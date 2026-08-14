@@ -7,11 +7,13 @@ This project uses JavaScript's built-in Date object to handle dates and calculat
 
 The main date calculations are handled in HabitList. Instead of manually calculating the day numbers, the application creates a new Date object for the start of the current week:
 
+```tsx
 const startOfWeek = new Date(dateData);
 
 startOfWeek.setDate(
     startOfWeek.getDate() - startOfWeek.getDay()
 );
+```
 
 getDay() returns a number from 0 to 6, where:
 
@@ -29,11 +31,13 @@ The current date's day number is subtracted from the current date to find the Su
 
 Once the start of the week is found, each day is calculated by creating a copy of the starting date and adding the appropriate number of days:
 
+```tsx
 const thisDate = new Date(startOfWeek);
 
 thisDate.setDate(
     startOfWeek.getDate() + index
 );
+```
 
 The index from the days.map() function represents how many days to move forward from Sunday.
 
@@ -67,7 +71,9 @@ The currently selected date is stored in a React Context called DateContext.
 
 Both Heading and HabitList access this context using useContext():
 
+```tsx
 const context = useContext(DateContext);
+```
 
 The context provides:
 
@@ -78,6 +84,7 @@ dateData represents the currently selected date, while setDateData allows the da
 
 The Heading component uses setDateData to move between weeks:
 
+```tsx
 const goToPreviousWeek = () => {
     const newDate = new Date(dateData);
     newDate.setDate(newDate.getDate() - 7);
@@ -89,6 +96,7 @@ const goToNextWeek = () => {
     newDate.setDate(newDate.getDate() + 7);
     setDateData(newDate);
 };
+```
 
 Moving the date by -7 or +7 days changes the selected week.
 
