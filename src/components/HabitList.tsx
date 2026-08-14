@@ -13,14 +13,9 @@ export default function HabitList()
 
     let {dateData} = context;
 
-    // Current day as numbers, 0 - 6 = Sunday = Saturday
-    let currentDayNum: number = dateData.getDay();
-
-    // Current date
-    let currentDateNum: number = dateData.getDate();
-
-    // Start of week date = current date - current day number
-    let startOfWeekDate: number = currentDateNum - currentDayNum;
+    // Start of the current week
+    const startOfWeek = new Date(dateData);
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
 
     let days: string[] = [
         "Sun",
@@ -48,11 +43,12 @@ export default function HabitList()
             </div>
             <div className="flex justify-between">
                 {days.map((dayName, index) => {
-                    const thisDateNum = startOfWeekDate + index;
-                    
+                    const thisDate = new Date(startOfWeek);
+                    thisDate.setDate(startOfWeek.getDate() + index);
+
                     return (
                         <Button size="large" key={index}>
-                            {dayName} {thisDateNum}
+                            {dayName} {thisDate.getDate()}
                         </Button>
                     );
                 })}
