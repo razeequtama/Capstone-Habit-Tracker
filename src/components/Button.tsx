@@ -1,14 +1,15 @@
-import type { ReactNode } from "react"
+import type { ReactNode, MouseEventHandler } from "react"
 
 type ButtonVariants = "primary" | "secondary" | "danger"
 
 type ButtonType = {
     children: ReactNode,
     variant?: ButtonVariants,
-    size?: string
+    size?: string,
+    onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
-export default function Button({children, variant = "primary", size = "small"}: ButtonType)
+export default function Button({children, variant = "primary", size = "small", onClick}: ButtonType)
 {
 
     let variantSelection = "";
@@ -43,8 +44,9 @@ export default function Button({children, variant = "primary", size = "small"}: 
             break;
     }
 
+
     return(
-        <button className={`mx-2 my-2 transition-all ${variantSelection} ${sizeSelection} cursor-pointer`}>
+        <button onClick={onClick} className={`mx-2 my-2 transition-all ${variantSelection} ${sizeSelection} cursor-pointer`}>
             {children}
         </button>
     )
