@@ -1,6 +1,5 @@
-# Habit Tracker
+# Habit Tracker 
 I'll be applying what I know about React and TypeScript through this simple project.
----
 # Button Types
 ![alt text](<docs/Button Variants.png>)
 - Primary: Gentle amber color, white text, good for main actions.
@@ -9,7 +8,6 @@ I'll be applying what I know about React and TypeScript through this simple proj
 ## How to Change Button Types
 Set the "variant" attribute into "primary" | "secondary" | "danger" to a button component.
 ![alt text](<docs/Button Variants Change.png>)
----
 # Button Sizes
 ![alt text](<docs/Button Sizes.png>)
 - Small: 24px for X-Axis padding, 8px for Y-Axis padding, (px-6 py-2) 
