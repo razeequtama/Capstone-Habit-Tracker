@@ -1,8 +1,16 @@
-type HeadingProps = {
-    text: string
-}
+import Title from "./Title"
+import Button from "./Button"
 
-export default function Heading(props: HeadingProps)
+export default function Heading()
 {
-  return <h1 className="font-bold text-5xl text-amber-50 px-6 py-4">{props.text}</h1>
+  return(
+    <div className="flex justify-between items-center">
+      <Title text="Habit Tracker"/>
+      <div className="mx-4">
+        <Button variant="primary">Prev</Button>
+        <Button variant="primary">Next</Button>
+      </div>
+      
+    </div>
+  )
 }
