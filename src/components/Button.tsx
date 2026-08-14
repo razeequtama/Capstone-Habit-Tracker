@@ -5,17 +5,19 @@ type ButtonVariants = "primary" | "secondary" | "danger"
 type ButtonType = {
     children: ReactNode,
     variant?: ButtonVariants,
-    sizing?: string
+    size?: string
 }
 
-export default function Button({children, variant = "primary", sizing = "mx-3 my-2 px-7 py-2"}: ButtonType)
+export default function Button({children, variant = "primary", size = "small"}: ButtonType)
 {
 
     let variantSelection = "";
+    let sizeSelection = "";
 
     switch(variant)
     {
     case "primary":
+    // Amber background, white color
       variantSelection = "text-amber-50 bg-indigo-600 rounded-md hover:bg-indigo-700";
       break;
     case "secondary":
@@ -28,8 +30,21 @@ export default function Button({children, variant = "primary", sizing = "mx-3 my
       break;
     }
 
+    switch(size)
+    {
+        case "small":
+            sizeSelection = "px-6 py-2";
+            break;
+        case "medium":
+            sizeSelection = "px-10 py-4";
+            break;
+        case "large":
+            sizeSelection = "px-14 py-6";
+            break;
+    }
+
     return(
-        <button className={`transition-all ${variantSelection} ${sizing}`}>
+        <button className={`mx-2 my-2 transition-all ${variantSelection} ${sizeSelection}`}>
             {children}
         </button>
     )
