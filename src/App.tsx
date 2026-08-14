@@ -1,10 +1,10 @@
-import Heading from "./components/Heading"
+import MainPage from "./pages/MainPage"
 
 export default function App()
 {
   return(
     <>
-      <Heading />
+      <MainPage />
     </>
   )
   

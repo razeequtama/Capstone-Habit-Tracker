@@ -44,7 +44,7 @@ export default function Button({children, variant = "primary", size = "small"}: 
     }
 
     return(
-        <button className={`mx-2 my-2 transition-all ${variantSelection} ${sizeSelection}`}>
+        <button className={`mx-2 my-2 transition-all ${variantSelection} ${sizeSelection} cursor-pointer`}>
             {children}
         </button>
     )
