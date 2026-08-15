@@ -46,6 +46,10 @@ export default function Heading()
     newDate.setDate(newDate.getDate() + 7)
     setDateData(newDate)
   }
+
+  const goToToday = () => {
+    setDateData(new Date())
+  }
  
   return(
     <div className="flex justify-between items-center">
@@ -54,6 +58,7 @@ export default function Heading()
         <p className="text-amber-50">Today: {currDayName}, {currDayDate} {currMonthName} {currYear}</p>
         <div className="mx-4 md:flex">
           <Button onClick={goToPreviousWeek} size="medium">Prev</Button>
+          <Button onClick={goToToday} size="medium">Today</Button>
           <Button onClick={goToNextWeek} size="medium">Next</Button>
         </div>
       </div>

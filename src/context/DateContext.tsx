@@ -1,4 +1,4 @@
-import {createContext, useState, type ReactNode} from "react";
+import {createContext, useState, type ReactNode, useEffect} from "react";
 
 
 // ============================================================
@@ -9,11 +9,23 @@ import {createContext, useState, type ReactNode} from "react";
 //
 // {
 //     dateData: Date,
-//     setDateData: some function
+//     setDateData: some function,
+//     habits: Habit[],
+//     addHabit: function,
+//     deleteHabit: function,
+//     toggleHabitDay: function,
+//     goToToday: function
 // }
 //
 // So we create a TypeScript type to describe that object.
 //
+
+// Habit type: each habit has an id, name, and completion dates
+export type Habit = {
+  id: string;
+  name: string;
+  completedDates: Record<string, boolean>;
+};
 
 export type DateContextType = {
 
@@ -41,6 +53,25 @@ export type DateContextType = {
     // of the function we're going to get from useState().
     //
     setDateData: React.Dispatch<React.SetStateAction<Date>>;
+
+    // habits is an array of all habits
+    habits: Habit[];
+
+    // addHabit adds a new habit with the given name
+    addHabit: (name: string) => void;
+
+    // deleteHabit removes a habit by its id
+    deleteHabit: (habitId: string) => void;
+
+    // toggleHabitDay toggles the completion state for a habit on a specific date
+    // The date should be in YYYY-MM-DD format
+    toggleHabitDay: (habitId: string, dateString: string) => void;
+
+    // goToToday sets dateData to today's date
+    goToToday: () => void;
+
+    // dateToString converts a Date to YYYY-MM-DD format using local time
+    dateToString: (date: Date) => string;
 };
 
 
@@ -128,6 +159,25 @@ export function DateContextProvider({children}: DataContextProviderType) {
     //
 
     const [dateData, setDateData] = useState(new Date());
+    
+    // Initialize habits from localStorage (runs once during mount)
+    const [habits, setHabits] = useState<Habit[]>(() => {
+        const storedHabits = localStorage.getItem("habits");
+        if (storedHabits) {
+            try {
+                return JSON.parse(storedHabits);
+            } catch (error) {
+                console.error("Failed to parse stored habits:", error);
+                return [];
+            }
+        }
+        return [];
+    });
+
+    // Save habits to localStorage whenever they change
+    useEffect(() => {
+        localStorage.setItem("habits", JSON.stringify(habits));
+    }, [habits]);
 
 
     // At this point we basically have:
@@ -140,14 +190,86 @@ export function DateContextProvider({children}: DataContextProviderType) {
     //     ↓
     //     function that changes dateData
     //
+    // habits
+    //     ↓
+    //     array of Habit objects
+    //
 
 
     // ========================================================
-    // 6. PUT BOTH THINGS INTO ONE OBJECT
+    // HELPER FUNCTION: Convert Date to YYYY-MM-DD format
     // ========================================================
     //
-    // We want to send BOTH dateData and setDateData
-    // through our Context.
+    // This function takes a JavaScript Date object
+    // and converts it to a string in YYYY-MM-DD format
+    // using local time (not UTC).
+    //
+    // We avoid toISOString() because it uses UTC time
+    // and can shift dates based on timezone.
+    //
+    // Example: new Date(2026, 7, 15) → "2026-08-15"
+    //
+    const dateToString = (date: Date): string => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
+
+
+    // ========================================================
+    // HABIT MANAGEMENT FUNCTIONS
+    // ========================================================
+
+    // Add a new habit with a unique ID
+    const addHabit = (name: string) => {
+        const trimmedName = name.trim();
+        if (!trimmedName) {
+            return; // Don't add empty habits
+        }
+        const newHabit: Habit = {
+            id: `habit-${Date.now()}`, // Simple unique ID using timestamp
+            name: trimmedName,
+            completedDates: {},
+        };
+        setHabits([...habits, newHabit]);
+    };
+
+    // Delete a habit by its ID
+    const deleteHabit = (habitId: string) => {
+        setHabits(habits.filter((habit) => habit.id !== habitId));
+    };
+
+    // Toggle the completion state for a specific habit on a specific date
+    const toggleHabitDay = (habitId: string, dateString: string) => {
+        setHabits(
+            habits.map((habit) => {
+                if (habit.id === habitId) {
+                    return {
+                        ...habit,
+                        completedDates: {
+                            ...habit.completedDates,
+                            [dateString]: !habit.completedDates[dateString],
+                        },
+                    };
+                }
+                return habit;
+            })
+        );
+    };
+
+    // Set dateData to today's date
+    const goToToday = () => {
+        setDateData(new Date());
+    };
+
+
+    // ========================================================
+    // 6. PUT ALL THINGS INTO ONE OBJECT
+    // ========================================================
+    //
+    // We want to send dateData, setDateData, habits, and
+    // all the habit management functions through our Context.
     //
     // So we put them together in an object.
     //
@@ -155,11 +277,25 @@ export function DateContextProvider({children}: DataContextProviderType) {
     //
     // {
     //     dateData: new Date(),
-    //     setDateData: [function]
+    //     setDateData: [function],
+    //     habits: [Habit[], ...],
+    //     addHabit: [function],
+    //     deleteHabit: [function],
+    //     toggleHabitDay: [function],
+    //     goToToday: [function]
     // }
     //
 
-    const data = {dateData, setDateData};
+    const data = {
+        dateData,
+        setDateData,
+        habits,
+        addHabit,
+        deleteHabit,
+        toggleHabitDay,
+        goToToday,
+        dateToString,
+    };
 
 
     // ========================================================
